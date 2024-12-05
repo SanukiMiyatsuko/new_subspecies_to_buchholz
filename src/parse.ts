@@ -41,9 +41,14 @@ export class Scanner {
         return true;
     }
 
-    consumeStrHead(): boolean {
+    expectStrHead(): boolean {
         const ch = this.str[this.pos];
-        if (ch !== "a" && ch !== "亜") return false;
+        if (ch === undefined)
+            throw Error(
+                `${this.pos + 1}文字目に亜もしくはaが期待されていましたが、これ以上文字がありません`,
+            );
+        if (ch !== "亜" && ch !== "a")
+            throw Error(`${this.pos + 1}文字目に亜もしくはaが期待されていましたが、${ch}が見つかりました`);
         this.pos += 1;
         return true;
     }
@@ -119,43 +124,24 @@ export class Scanner {
         } else if (this.consume("I")) {
             return IOTA_S;
         } else {
+            this.expectStrHead()
             const argarr: T_S[] = [];
-            if (!this.consumeStrHead()) {
-                if (this.consume("(")) {
-                    const term = this.parse_term();
-                    argarr.push(term);
-                    if (this.consume(")")) return subs(argarr);
-                    this.expect(",");
-                } else {
-                    this.consume("_");
-                    if (this.consume("{")) {
-                        const term = this.parse_term();
-                        argarr.push(term);
-                        this.expect("}");
-                        this.expect("(");
-                    } else {
-                        const term = this.parse_term();
-                        argarr.push(term);
-                        this.expect("(");
-                    }
-                }
+            if (this.consume("(")) {
+                const term = this.parse_term();
+                argarr.push(term);
+                if (this.consume(")")) return subs(argarr);
+                this.expect(",");
             } else {
-                if (this.consume("(")) {
+                this.consume("_");
+                if (this.consume("{")) {
                     const term = this.parse_term();
                     argarr.push(term);
-                    if (this.consume(")")) return subs(argarr);
-                    this.expect(",");
+                    this.expect("}");
+                    this.expect("(");
                 } else {
-                    if (this.consume("{")) {
-                        const term = this.parse_term();
-                        argarr.push(term);
-                        this.expect("}");
-                        this.expect("(");
-                    } else {
-                        const term = this.parse_term();
-                        argarr.push(term);
-                        this.expect("(");
-                    }
+                    const term = this.parse_term();
+                    argarr.push(term);
+                    this.expect("(");
                 }
             }
             const arg = this.parse_term();
