@@ -117,7 +117,7 @@ export function ptL(s: RT_B): RT_B {
     }
 }
 
-// nより大きい方
+// nより小さい方
 export function ptS(s: RT_B): RT_B {
     if (s.type === "zero") {
         return Z;
@@ -179,7 +179,7 @@ export function ct(n: number, s: RT_B): RT_B {
     }
 }
 
-// 亞関数の準備
+// 亜関数の準備
 // ===========================================
 
 export type AT_S = { readonly type: "plus", readonly add: PT_S[] };
