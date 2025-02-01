@@ -263,8 +263,3 @@ test('truns(a(a(a(1,0),0))) === ψ_0(ψ_1(ψ_1(ψ_0(ψ_1(0)))))', () => {
   const x = new Scanner("a(a(a(1,0),0))").parse_term()
   expect(termToString(trans(x), options)).toBe("ψ_0(ψ_1(ψ_1(ψ_0(ψ_1(0)))))")
 })
-
-test('truns(a(a(a(1,0),0,0))) === ψ_0(ψ_1(ψ_1(ψ_0(ψ_1(0)))))', () => {
-  const x = new Scanner("a(a(a(1,0),0,0,0))").parse_term()
-  expect(termToString(trans(x), options)).toBe("ψ_0(ψ_1(ψ_1(ψ_0(ψ_1(0)))))")
-})

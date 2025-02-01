@@ -135,7 +135,7 @@ export function ptS(s: RT_B): RT_B {
 // 早めの崩壊
 export function ec(s: RT_B): RT_B {
     if (equal(ptL(s), Z)) {
-        return ptS(s);
+        return s;
     } else {
         return standardisation(plus(psi("0",ptL(s)), ptS(s)));
     }
@@ -174,7 +174,7 @@ export function ct(n: number, s: RT_B): RT_B {
             }
             return sanitize_plus_term_B(numterm);
         }
-        if (a === "0") return psi("1", standardisation(plus(ct(1, from_nat(n-1)) ,ec(b))));
+        if (a === "0") return psi("1", plus(ct(1, from_nat(n-1)) ,ec(b)));
         return psi("1", standardisation(plus(ct(1, from_nat(n)), b)));
     }
 }
@@ -213,7 +213,7 @@ export function trans(s: T_S): RT_B {
     } else if (s.type === "plus") {
         const a = s.add[0];
         const b = sanitize_plus_term_S(s.add.slice(1));
-        return standardisation(plus(trans(a), trans(b)));
+        return plus(trans(a), trans(b));
     } else {
         const a = s.arr;
         let k_max = a.length-1;
@@ -228,7 +228,7 @@ export function trans(s: T_S): RT_B {
             for (let i = k_max; i > 0; i--) {
                 tarmList.push(ct(i-1, ec(trans(a[i]))));
             }
-            return psi("1", standardisation(plus(ct(1, lp(standardisation(tarmList.reduce((accumulator, currentValue) => plus(accumulator, currentValue))))), ec(trans(a[0])))));
+            return psi("1", plus(ct(1, lp(standardisation(tarmList.reduce((accumulator, currentValue) => plus(accumulator, currentValue))))), ec(trans(a[0]))));
         }
     }
 }
@@ -264,7 +264,7 @@ function term_to_string(t: RT_B, options: Options): string {
 }
 
 function to_TeX(str: string): string {
-    str = str.replace(RegExp("ψ", "g"), "\\psi");
+    str = str.replace(/ψ/g, "\\psi");
     str = str.replace(/ω/g, "\\omega");
     str = str.replace(/Ω/g, "\\Omega");
     return str;
